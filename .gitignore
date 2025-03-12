@@ -2,4 +2,6 @@
 .env
 
 #c program
-c/hello
+c/a.out
+c/*
+c/*.o
