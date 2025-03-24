@@ -16,6 +16,12 @@ c/*.o
 scala/**/project
 scala/**/target
 
+# Maven
+maven/**/target
+
 # Java
 **/*.class
 
+# nodejs
+node/**/node_modules
+node/**/package-lock.json
