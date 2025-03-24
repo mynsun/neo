@@ -12,6 +12,10 @@ c/*.o
 !c/**/lib/*.h
 !c/**/Makefile*
 
+# Scala
+scala/**/project
+scala/**/target
 
 # Java
 **/*.class
+
