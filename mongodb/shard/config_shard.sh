@@ -50,7 +50,7 @@ mongo $IP_TEMP:27022 < rs.init
 #process status
 sleep 2s
 
-mongo $IP_TEMP:27017 < rs.addShard
+# mongo $IP_TEMP:27017 < rs.addShard
 
 #netstatus
 netstat -ntlp | grep mongo
