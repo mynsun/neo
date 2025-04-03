@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>프로토타입으로 Car 객체 만들기</title>
+        <script>
+            function Car(brand, grade, maxfuel, displacement, price) {
+                this.brand = brand;
+                this.grade = grade;
+                this.maxfuel = maxfuel;
+                this.displacement = displacement;
+                this.price = price;
+
+                this.info = function () {
+                    document.write(`Brand : ${this.brand} <br>`);
+                    document.write(`Grade : ${this.grade} <br>`);
+                    document.write(`Max Fuel : ${this.maxfuel} <br>`);
+                    document.write(`Displacement : ${this.displacement} <br>`);
+                    document.write(`Price : ${this.price} <br>`);
+                    document.write(`<hr />`);
+                }
+            this.drive = function (from, to, distance) {
+                    this.maxfuel -= distance;
+                    this.displacement += distance;
+                    if (this.maxfuel < 0) {
+                        alert("연료가 비어있습ㄴ다!");
+                    } else {
+                        document.write(`${brand} 차량이 ${from}에서 ${to}까지 ${distance}km 주행하셨습니다.<br>`);
+                        document.write(`총 주행거리는 ${this.displacement}입니다.<br>`);
+                        document.write(`잔여 연료량은 ${this.maxfuel}입니다.<br>`);
+                        if (this.maxfuel < 50) {
+                            document.write(`주유가 필요합니다.<br>`);
+                        }
+                        document.write(`<hr />`);
+                    }
+                }
+                this.refueling = function (amount) {
+                    this.maxfuel += amount;
+                    document.write(`${amount}L 주유하여 잔여 연료량은 ${this.maxfuel}입니다.<br>`);
+                    document.write(`<hr />`);
+                }
+            }
+        </script>
+    </head>
+<body>
+    <h3>프로토타입으로 Car 객체 만들기</h3>
+    <hr />
+    <script>
+        let benz = new Car("Benz", "SUV", 900, 4000, 3000);
+        benz.info();
+        benz.drive("Seoul", "Busan", 400);
+        benz.drive("Busan", "Incheon", 460);
+        benz.refueling(860);
+
+        let bmw = new Car("BMW", "Sedan", 500, 2500, 2000);
+        bmw.info();
+        bmw.drive("Seoul", "Daejeon", 300);
+        bmw.refueling(200);
+        bmw.drive("Busan", "Seoul", 300);
+    </script>
+</body>
+</html>
