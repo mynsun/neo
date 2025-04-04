@@ -56,5 +56,26 @@ app.post('/delete', (req, res) => {
     res.redirect('/select');
 })
 
+app.post('/login', (req, res) => {
+    const { id, pw } = req.body;
+    const result = connection.query('select * from user where userid = ? and passwd = ?', [id, pw]);
+    if (result.length== 0) {
+        res.redirect('error.html')
+    }
+    if (id == 'admin' || id == 'root') {
+        console.log(id + " => Administrator Logined")
+        res.redirect('member.html')
+    } else {
+        console.log(id + " => User Logined")
+        res.redirect('main.html')
+    }
+})
+
+app.post('/register', (req, res) => {
+    const { id, pw } = req.body;
+    const result = connection.query('insert into user values (?, ?)', [id, pw]);
+    console.log(result);
+    res.redirect('/')
+})
 
 module.exports = app;
