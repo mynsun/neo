@@ -124,7 +124,7 @@ app.post('/register', (req, res) => {
     }
 })
 
-// request O, Query X
+// request X, Query X
 app.get('/select', (req, res) => {
     const result = connection.query('select * from user');
     console.log(result);
@@ -152,7 +152,6 @@ app.post('/select', (req, res) => {
 app.get('/selectQuery', (req, res) => {
     const id = req.query.id;
     if (id == '') {
-        // res.send('User-id is empty');
         res.write("<script>alert('User-id is empty');</script>");
     } else {
         const result = connection.query('select * from user where userid = ?', [id]);   
@@ -168,7 +167,7 @@ app.get('/selectQuery', (req, res) => {
 
 // Request O, Query O
 app.post('/selectQuery', (req, res) => {
-    const id = req.query.id;
+    const id = req.body.id;
     if (id == '') {
         res.write("<script>alert('User-id is empty');</script>");
     } else {
