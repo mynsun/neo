@@ -2,8 +2,8 @@
 
 import class_calc
 
-a = int(input("Enter the first number: "))
-b = int(input("Enter the another number: "))
+a = int(input("Enter a number: "))
+b = int(input("Enter another number: "))
 
 my = class_calc.Calc(a, b)
 
