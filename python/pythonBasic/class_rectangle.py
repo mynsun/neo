@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from python.dataProject.class_animal import Animal
+from python.pythonBasic.class_animal import Animal
 
 
 class Rectangle(Animal):
