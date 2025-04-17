@@ -3,15 +3,15 @@ load data
 infile 'myterror.csv'
 insert into table myterror
 fields terminated by ','
-trailing nullcol(
+trailing nullcols(
     event_id,
     iyear,
     imonth,
     iday,
     country,
-    country_txt
-    region
-    region_txt
+    country_txt,
+    region,
+    region_txt,
     provstate,
     city,
     latitude,
