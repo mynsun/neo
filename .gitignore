@@ -24,11 +24,12 @@ maven/**/target
 node/**/node_modules
 node/**/package-lock.json
 
-# python
+## python
 .idea
+secret.json
 python/**/.venv
 python/**/__pycache__/
-**/secret.json
+**/ secret.json
 
 # mongodb
 mongodb/backup
