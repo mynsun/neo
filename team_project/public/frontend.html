@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>전기차 충전소 조회</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h2 { color: #2c3e50; }
+        .station { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 6px; }
+        #map { width: 100%; height: 400px; margin-top: 20px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h2>전기차 충전소 조회</h2>
+
+    <!-- 주소 검색 -->
+    <label for="address">주소 입력:</label>
+    <input type="text" id="address" placeholder="예: 강남역" />
+    <button onclick="getStationsByAddress()">주소로 조회</button>
+
+    <!-- 현재 위치 기반 -->
+    <button onclick="getNearbyStations()">현재 위치로 조회</button>
+
+    <div id="result"></div>
+    <div id="map"></div>
+
+    <!-- 카카오 지도 JS -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f4708cdafa0fb8c0ee209515bed953ea&libraries=services"></script>
+    <script>
+        let map;
+        let markers = [];
+
+        function initMap(lat = 37.5665, lng = 126.9780) {
+            const container = document.getElementById('map');
+            const options = {
+                center: new kakao.maps.LatLng(lat, lng),
+                level: 4
+            };
+            map = new kakao.maps.Map(container, options);
+        }
+
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
+        function addMarkers(stations) {
+            clearMarkers();
+            stations.forEach(station => {
+                const marker = new kakao.maps.Marker({
+                    map: map,
+                    position: new kakao.maps.LatLng(station["위도"], station["경도"]),
+                    title: station["충전소명"]
+                });
+
+                const info = `
+                    <div style="padding:5px;font-size:13px;">
+                        <strong>${station["충전소명"]}</strong><br>
+                        ${station["주소"]}<br>
+                        거리: ${station["거리(m)"]}m
+                    </div>
+                `;
+
+                const infowindow = new kakao.maps.InfoWindow({
+                    content: info
+                });
+
+                kakao.maps.event.addListener(marker, 'click', function () {
+                    infowindow.open(map, marker);
+                });
+
+                markers.push(marker);
+            });
+
+            if (stations.length > 0) {
+                map.setCenter(new kakao.maps.LatLng(stations[0]["위도"], stations[0]["경도"]));
+            }
+        }
+
+        function displayStations(data, method) {
+            const container = document.getElementById("result");
+            if (!data.charging_stations || data.charging_stations.length === 0) {
+                container.innerHTML = `<p>충전소 데이터를 찾을 수 없습니다.</p>`;
+                clearMarkers();
+                return;
+            }
+
+            container.innerHTML = `
+                <p><strong>${method === "address" ? "주소 기반 조회" : "현재 위치 조회"}</strong></p>
+                <p>조회 반경: ${data["반경(m)"]}m</p>
+                <p>총 ${data["충전소 수"]}개 충전소를 찾았습니다.</p>
+            `;
+
+            data.charging_stations.forEach(station => {
+                container.innerHTML += `
+                    <div class="station">
+                        <strong>${station["충전소명"]}</strong><br>
+                        주소: ${station["주소"]}<br>
+                        거리: ${station["거리(m)"]}m<br>
+                        충전기 타입: ${station["충전기타입"]}<br>
+                        설치년도: ${station["설치년도"] ?? '정보 없음'}<br>
+                        이용자 제한: ${station["이용자제한"] ?? '제한 없음'}<br>
+                    </div>
+                `;
+            });
+
+            addMarkers(data.charging_stations);
+        }
+
+        function getNearbyStations() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const radius = 2000;
+
+                    fetch(`/r_nearby?latitude=${lat}&longitude=${lon}&radius=${radius}`)
+                        .then(response => response.json())
+                        .then(data => displayStations(data, "location"))
+                        .catch(err => {
+                            console.error("API 호출 실패", err);
+                            alert("충전소 데이터를 가져오는 중 오류가 발생했습니다.");
+                        });
+                }, () => {
+                    alert("위치 정보를 가져올 수 없습니다.");
+                });
+            } else {
+                alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
+            }
+        }
+
+        function getStationsByAddress() {
+            const address = document.getElementById("address").value.trim();
+            if (!address) {
+                alert("주소를 입력하세요.");
+                return;
+            }
+
+            const radius = 2000;
+
+            fetch(`/r_by_address?address=${encodeURIComponent(address)}&radius=${radius}`)
+                .then(response => response.json())
+                .then(data => displayStations(data, "address"))
+                .catch(err => {
+                    console.error("API 호출 실패", err);
+                    alert("충전소 데이터를 가져오는 중 오류가 발생했습니다.");
+                });
+        }
+
+        // 페이지 로드 시 지도 초기화
+        window.onload = () => initMap();
+    </script>
+</body>
+</html>
