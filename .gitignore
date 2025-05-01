@@ -1,6 +1,9 @@
 # .env
 .env
 
+# .venv
+**/.venv
+
 #c program
 c/*
 c/*.o
