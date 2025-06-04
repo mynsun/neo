@@ -51,3 +51,4 @@ docker/mongodb/mongo*
 
 react/**/.git
 nestjs
+node_modules
