@@ -37,6 +37,14 @@ secret.json
 **/*.mp4
 **/*.mp3
 
+**/model.safetensors
+**/llama.cpp
+**/*.gguf
+**/traning_data
+**/stf.json
+**/finetuned-*
+**/.webui_secret_key
+
 # mongodb
 mongodb/backup
 
